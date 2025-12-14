@@ -1,0 +1,59 @@
+#cloud-config
+
+package_update: true
+package_upgrade: true
+
+packages:
+  - nodejs
+  - npm
+  - git
+  - curl
+  - chromium-browser
+  - chromium-chromedriver
+
+runcmd:
+  # Установка Node.js 18
+  - curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
+  - apt-get install -y nodejs
+
+  # Создание пользователя
+  - useradd -m -s /bin/bash parser
+  - mkdir -p /opt/parser-node
+  - chown -R parser:parser /opt/parser-node
+
+  # Клонирование кода парсера
+  - cd /opt/parser-node
+  - git clone https://github.com/your-repo/parser-node.git .
+  - npm install
+
+  # Создание systemd сервиса
+  - |
+    cat > /etc/systemd/system/parser-node.service << 'EOF'
+    [Unit]
+    Description=Avito Parser Node
+    After=network.target
+
+    [Service]
+    Type=simple
+    User=parser
+    WorkingDirectory=/opt/parser-node
+    Environment=NODE_ENV=production
+    Environment=NODE_ID=${node_id}
+    Environment=API_SERVER=http://${api_server}:3000
+    Environment=PORT=3000
+    ExecStart=/usr/bin/node parser.js
+    Restart=always
+    RestartSec=10
+
+    [Install]
+    WantedBy=multi-user.target
+    EOF
+
+  # Запуск сервиса
+  - systemctl daemon-reload
+  - systemctl enable parser-node
+  - systemctl start parser-node
+
+  # Настройка файрвола
+  - ufw allow 3000/tcp
+  - ufw --force enable

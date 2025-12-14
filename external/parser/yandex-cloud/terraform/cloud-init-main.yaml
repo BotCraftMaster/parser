@@ -1,0 +1,40 @@
+#cloud-config
+
+package_update: true
+package_upgrade: true
+
+packages:
+  - docker.io
+  - docker-compose
+  - git
+  - curl
+
+runcmd:
+  # Настройка Docker
+  - systemctl enable docker
+  - systemctl start docker
+  - usermod -aG docker ubuntu
+
+  # Создание директорий
+  - mkdir -p /opt/parser-system
+  - cd /opt/parser-system
+
+  # Клонирование репозитория (замените на свой)
+  - git clone https://github.com/your-repo/parser-system.git .
+
+  # Запуск главного сервера
+  - docker-compose up -d
+
+  # Настройка файрвола
+  - ufw allow 80/tcp
+  - ufw allow 443/tcp
+  - ufw allow 8080/tcp
+  - ufw --force enable
+
+write_files:
+  - path: /opt/parser-system/.env
+    content: |
+      NODE_ENV=production
+      DB_PASSWORD=your_secure_password
+      REDIS_PASSWORD=your_redis_password
+    permissions: '0600'

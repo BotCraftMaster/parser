@@ -1,0 +1,39 @@
+# Конфигурация Traefik
+api:
+  dashboard: true
+  insecure: true
+
+entryPoints:
+  web:
+    address: ":80"
+  websecure:
+    address: ":443"
+
+providers:
+  docker:
+    endpoint: "unix:///var/run/docker.sock"
+    exposedByDefault: false
+  file:
+    filename: /etc/traefik/dynamic.yml
+    watch: true
+
+# Автоматические SSL сертификаты
+certificatesResolvers:
+  letsencrypt:
+    acme:
+      email: your-email@example.com
+      storage: /certs/acme.json
+      httpChallenge:
+        entryPoint: web
+
+# Логирование
+log:
+  level: INFO
+
+accessLog: {}
+
+# Метрики
+metrics:
+  prometheus:
+    addEntryPointsLabels: true
+    addServicesLabels: true

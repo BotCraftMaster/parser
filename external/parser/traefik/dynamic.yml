@@ -1,0 +1,30 @@
+# Динамическая конфигурация для парсер-нод
+http:
+  services:
+    parser-nodes:
+      loadBalancer:
+        sticky:
+          cookie:
+            name: parser-node
+            secure: true
+            httpOnly: true
+        servers:
+          - url: "http://parser-node-1:3000"
+          - url: "http://parser-node-2:3000"
+          - url: "http://parser-node-3:3000"
+          - url: "http://parser-node-4:3000"
+          - url: "http://parser-node-5:3000"
+          - url: "http://parser-node-6:3000"
+          - url: "http://parser-node-7:3000"
+          - url: "http://parser-node-8:3000"
+        healthCheck:
+          path: "/health"
+          interval: "30s"
+          timeout: "5s"
+
+  routers:
+    parser-api:
+      rule: "Host(`parser.yourparser.com`) && PathPrefix(`/api/parse`)"
+      service: parser-nodes
+      tls:
+        certResolver: letsencrypt

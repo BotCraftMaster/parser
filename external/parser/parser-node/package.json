@@ -1,0 +1,22 @@
+{
+  "name": "avito-parser-node",
+  "version": "1.0.0",
+  "description": "Парсер-нода для Авито",
+  "main": "parser.js",
+  "scripts": {
+    "start": "node parser.js",
+    "dev": "nodemon parser.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "axios": "^1.6.0",
+    "cheerio": "^1.0.0-rc.12",
+    "puppeteer": "^21.5.0",
+    "user-agents": "^1.0.1",
+    "proxy-agent": "^6.3.1",
+    "rate-limiter-flexible": "^3.0.8"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
