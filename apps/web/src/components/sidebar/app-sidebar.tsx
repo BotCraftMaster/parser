@@ -25,6 +25,7 @@ import {
   IconSearch,
   IconSettings,
   IconUsers,
+  IconEye,
 } from "@tabler/icons-react";
 import type * as React from "react";
 import {
@@ -38,8 +39,13 @@ const data = {
   navMain: [
     {
       title: "Dashboard",
-      url: "#",
+      url: "/",
       icon: IconDashboard,
+    },
+    {
+      title: "Мониторинг",
+      url: "/monitors",
+      icon: IconEye,
     },
     {
       title: "Lifecycle",
